@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 에이전트 아이디어 사내 공모전</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: auto;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* AI 네트워크 배경 효과 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(139, 92, 246, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.3) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        /* 움직이는 그리드 패턴 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                linear-gradient(rgba(59, 130, 246, 0.2) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.2) 2px, transparent 2px);
+            background-size: 40px 40px;
+            animation: gridMove 10s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        /* 플로팅 노드 및 로고 효과 */
+        .floating-nodes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .node {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(59, 130, 246, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+        }
+
+        .floating-logo {
+            position: absolute;
+            width: 120px;
+            height: 30px;
+            opacity: 0.4;
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+        }
+
+        .floating-logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-logo:nth-child(1) {
+            top: 15%;
+            left: 5%;
+            animation: logoFloat1 25s infinite ease-in-out;
+        }
+
+        .floating-logo:nth-child(2) {
+            top: 25%;
+            right: 10%;
+            animation: logoFloat2 30s infinite ease-in-out;
+            transform: rotate(15deg);
+        }
+
+        .floating-logo:nth-child(3) {
+            bottom: 20%;
+            left: 15%;
+            animation: logoFloat3 28s infinite ease-in-out;
+            transform: rotate(-10deg);
+        }
+
+        .floating-logo:nth-child(4) {
+            top: 60%;
+            right: 5%;
+            animation: logoFloat4 35s infinite ease-in-out;
+            width: 100px;
+            height: 25px;
+        }
+
+        .floating-logo:nth-child(5) {
+            top: 80%;
+            left: 50%;
+            animation: logoFloat5 32s infinite ease-in-out;
+            transform: rotate(25deg);
+        }
+
+        .floating-logo:nth-child(6) {
+            top: 5%;
+            left: 60%;
+            animation: logoFloat6 27s infinite ease-in-out;
+            transform: rotate(-20deg);
+        }
+
+        .floating-logo:nth-child(7) {
+            top: 45%;
+            left: 5%;
+            animation: logoFloat7 33s infinite ease-in-out;
+            transform: rotate(30deg);
+        }
+
+        .node:nth-child(8) { 
+            top: 10%; 
+            left: 20%; 
+            animation: float1 15s infinite ease-in-out;
+        }
+        .node:nth-child(9) { 
+            top: 20%; 
+            left: 80%; 
+            animation: float2 20s infinite ease-in-out;
+            background: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.8);
+        }
+        .node:nth-child(10) { 
+            top: 60%; 
+            left: 10%; 
+            animation: float3 18s infinite ease-in-out;
+            background: rgba(16, 185, 129, 0.8);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+        }
+        .node:nth-child(11) { 
+            top: 80%; 
+            left: 70%; 
+            animation: float4 22s infinite ease-in-out;
+        }
+        .node:nth-child(12) { 
+            top: 50%; 
+            left: 50%; 
+            animation: float5 17s infinite ease-in-out;
+            width: 10px;
+            height: 10px;
+        }
+
+        /* 추가 별들 */
+        .node:nth-child(13) { 
+            top: 35%; 
+            left: 25%; 
+            animation: twinkle1 8s infinite ease-in-out;
+            background: rgba(251, 191, 36, 0.9);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.9);
+            width: 6px;
+            height: 6px;
+        }
+        .node:nth-child(14) { 
+            top: 15%; 
+            left: 75%; 
+            animation: twinkle2 12s infinite ease-in-out;
+            background: rgba(236, 72, 153, 0.8);
+            box-shadow: 0 0 18px rgba(236, 72, 153, 0.8);
+            width: 7px;
+            height: 7px;
+        }
+        .node:nth-child(15) { 
+            top: 85%; 
+            left: 15%; 
+            animation: twinkle3 10s infinite ease-in-out;
+            background: rgba(168, 85, 247, 0.9);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.9);
+        }
+        .node:nth-child(16) { 
+            top: 70%; 
+            left: 85%; 
+            animation: twinkle4 14s infinite ease-in-out;
+            background: rgba(16, 185, 129, 0.8);
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.8);
+            width: 5px;
+            height: 5px;
+        }
+        .node:nth-child(17) { 
+            top: 40%; 
+            left: 90%; 
+            animation: twinkle5 9s infinite ease-in-out;
+            background: rgba(59, 130, 246, 0.9);
+            box-shadow: 0 0 22px rgba(59, 130, 246, 0.9);
+            width: 9px;
+            height: 9px;
+        }
+        .node:nth-child(18) { 
+            top: 25%; 
+            left: 45%; 
+            animation: twinkle6 11s infinite ease-in-out;
+            background: rgba(245, 101, 101, 0.8);
+            box-shadow: 0 0 17px rgba(245, 101, 101, 0.8);
+            width: 6px;
+            height: 6px;
+        }
+        .node:nth-child(19) { 
+            top: 65%; 
+            left: 35%; 
+            animation: twinkle7 13s infinite ease-in-out;
+            background: rgba(251, 191, 36, 0.8);
+            box-shadow: 0 0 19px rgba(251, 191, 36, 0.8);
+            width: 7px;
+            height: 7px;
+        }
+        .node:nth-child(20) { 
+            top: 5%; 
+            left: 30%; 
+            animation: twinkle8 7s infinite ease-in-out;
+            background: rgba(139, 92, 246, 0.9);
+            box-shadow: 0 0 14px rgba(139, 92, 246, 0.9);
+            width: 5px;
+            height: 5px;
+        }
+        .node:nth-child(21) { 
+            top: 90%; 
+            left: 60%; 
+            animation: twinkle9 15s infinite ease-in-out;
+            background: rgba(236, 72, 153, 0.9);
+            box-shadow: 0 0 21px rgba(236, 72, 153, 0.9);
+            width: 8px;
+            height: 8px;
+        }
+        .node:nth-child(22) { 
+            top: 55%; 
+            left: 75%; 
+            animation: twinkle10 6s infinite ease-in-out;
+            background: rgba(16, 185, 129, 0.9);
+            box-shadow: 0 0 13px rgba(16, 185, 129, 0.9);
+            width: 6px;
+            height: 6px;
+        }
+        .node:nth-child(23) { 
+            top: 30%; 
+            left: 8%; 
+            animation: twinkle11 16s infinite ease-in-out;
+            background: rgba(59, 130, 246, 0.8);
+            box-shadow: 0 0 18px rgba(59, 130, 246, 0.8);
+            width: 7px;
+            height: 7px;
+        }
+        .node:nth-child(24) { 
+            top: 45%; 
+            left: 65%; 
+            animation: twinkle12 8s infinite ease-in-out;
+            background: rgba(245, 101, 101, 0.9);
+            box-shadow: 0 0 15px rgba(245, 101, 101, 0.9);
+            width: 5px;
+            height: 5px;
+        }
+        .node:nth-child(25) { 
+            top: 75%; 
+            left: 25%; 
+            animation: twinkle1 10s infinite ease-in-out;
+            animation-delay: 3s;
+            background: rgba(168, 85, 247, 0.8);
+            box-shadow: 0 0 16px rgba(168, 85, 247, 0.8);
+            width: 6px;
+            height: 6px;
+        }
+        .node:nth-child(26) { 
+            top: 10%; 
+            left: 55%; 
+            animation: twinkle2 12s infinite ease-in-out;
+            animation-delay: 4s;
+            background: rgba(251, 191, 36, 0.9);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.9);
+            width: 8px;
+            height: 8px;
+        }
+        .node:nth-child(27) { 
+            top: 95%; 
+            left: 40%; 
+            animation: twinkle3 9s infinite ease-in-out;
+            animation-delay: 2s;
+            background: rgba(59, 130, 246, 0.9);
+            box-shadow: 0 0 17px rgba(59, 130, 246, 0.9);
+            width: 7px;
+            height: 7px;
+        }
+
+        @keyframes logoFloat1 {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(0deg) scale(1); 
+                opacity: 0.4;
+            }
+            20% { 
+                transform: translate(120px, -80px) rotate(15deg) scale(1.3); 
+                opacity: 0.7;
+            }
+            40% { 
+                transform: translate(-90px, 100px) rotate(-10deg) scale(0.8); 
+                opacity: 0.3;
+            }
+            60% { 
+                transform: translate(200px, 60px) rotate(20deg) scale(1.1); 
+                opacity: 0.6;
+            }
+            80% { 
+                transform: translate(-150px, -40px) rotate(-15deg) scale(0.9); 
+                opacity: 0.4;
+            }
+        }
+
+        @keyframes logoFloat2 {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(5deg) scale(1); 
+                opacity: 0.4;
+            }
+            25% { 
+                transform: translate(-180px, 120px) rotate(25deg) scale(1.4); 
+                opacity: 0.7;
+            }
+            50% { 
+                transform: translate(100px, -150px) rotate(-20deg) scale(0.7); 
+                opacity: 0.3;
+            }
+            75% { 
+                transform: translate(-120px, 80px) rotate(30deg) scale(1.2); 
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes logoFloat3 {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(-5deg) scale(1); 
+                opacity: 0.4;
+            }
+            30% { 
+                transform: translate(160px, -100px) rotate(18deg) scale(1.5); 
+                opacity: 0.7;
+            }
+            60% { 
+                transform: translate(-200px, -60px) rotate(-25deg) scale(0.6); 
+                opacity: 0.3;
+            }
+            90% { 
+                transform: translate(80px, 140px) rotate(12deg) scale(1.1); 
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes logoFloat4 {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(0deg) scale(1); 
+                opacity: 0.4;
+            }
+            15% { 
+                transform: translate(-100px, -120px) rotate(-18deg) scale(0.8); 
+                opacity: 0.3;
+            }
+            35% { 
+                transform: translate(140px, 80px) rotate(22deg) scale(1.3); 
+                opacity: 0.7;
+            }
+            55% { 
+                transform: translate(-80px, 160px) rotate(-30deg) scale(0.9); 
+                opacity: 0.4;
+            }
+            75% { 
+                transform: translate(180px, -40px) rotate(35deg) scale(1.1); 
+                opacity: 0.6;
+            }
+            90% { 
+                transform: translate(-120px, -80px) rotate(-12deg) scale(0.7); 
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes logoFloat5 {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(8deg) scale(1); 
+                opacity: 0.4;
+            }
+            20% { 
+                transform: translate(-150px, -140px) rotate(28deg) scale(1.2); 
+                opacity: 0.7;
+            }
+            40% { 
+                transform: translate(120px, -80px) rotate(-15deg) scale(0.8); 
+                opacity: 0.3;
+            }
+            60% { 
+                transform: translate(-200px, 100px) rotate(40deg) scale(1.4); 
+                opacity: 0.6;
+            }
+            80% { 
+                transform: translate(90px, 180px) rotate(-20deg) scale(0.9); 
+                opacity: 0.4;
+            }
+        }
+
+        @keyframes logoFloat6 {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(-20deg) scale(1); 
+                opacity: 0.4;
+            }
+            25% { 
+                transform: translate(100px, 140px) rotate(10deg) scale(1.3); 
+                opacity: 0.7;
+            }
+            50% { 
+                transform: translate(-120px, -80px) rotate(-35deg) scale(0.8); 
+                opacity: 0.3;
+            }
+            75% { 
+                transform: translate(180px, 60px) rotate(25deg) scale(1.1); 
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes logoFloat7 {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(30deg) scale(1); 
+                opacity: 0.4;
+            }
+            20% { 
+                transform: translate(160px, -120px) rotate(-5deg) scale(1.4); 
+                opacity: 0.7;
+            }
+            40% { 
+                transform: translate(-90px, 100px) rotate(45deg) scale(0.7); 
+                opacity: 0.3;
+            }
+            60% { 
+                transform: translate(220px, 80px) rotate(-25deg) scale(1.2); 
+                opacity: 0.6;
+            }
+            80% { 
+                transform: translate(-150px, -60px) rotate(50deg) scale(0.9); 
+                opacity: 0.4;
+            }
+        }
+
+        /* 반짝반짝 별 애니메이션들 */
+        @keyframes twinkle1 {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            25% { opacity: 1; transform: scale(1.5); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+            75% { opacity: 0.9; transform: scale(1.3); }
+        }
+
+        @keyframes twinkle2 {
+            0%, 100% { opacity: 0.4; transform: scale(0.9) rotate(0deg); }
+            30% { opacity: 1; transform: scale(1.4) rotate(180deg); }
+            60% { opacity: 0.5; transform: scale(1.0) rotate(360deg); }
+        }
+
+        @keyframes twinkle3 {
+            0%, 100% { opacity: 0.2; transform: scale(0.7); }
+            20% { opacity: 0.8; transform: scale(1.2); }
+            40% { opacity: 1; transform: scale(1.6); }
+            80% { opacity: 0.4; transform: scale(0.9); }
+        }
+
+        @keyframes twinkle4 {
+            0%, 100% { opacity: 0.5; transform: scale(1.0); }
+            15% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.8); }
+            85% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        @keyframes twinkle5 {
+            0%, 100% { opacity: 0.6; transform: scale(1.1) rotate(0deg); }
+            25% { opacity: 0.4; transform: scale(0.9) rotate(90deg); }
+            50% { opacity: 1; transform: scale(1.5) rotate(180deg); }
+            75% { opacity: 0.8; transform: scale(1.3) rotate(270deg); }
+        }
+
+        @keyframes twinkle6 {
+            0%, 100% { opacity: 0.3; transform: scale(0.6); }
+            33% { opacity: 0.9; transform: scale(1.4); }
+            66% { opacity: 1; transform: scale(1.7); }
+        }
+
+        @keyframes twinkle7 {
+            0%, 100% { opacity: 0.4; transform: scale(0.8) rotate(0deg); }
+            20% { opacity: 1; transform: scale(1.6) rotate(72deg); }
+            40% { opacity: 0.6; transform: scale(1.1) rotate(144deg); }
+            60% { opacity: 0.9; transform: scale(1.3) rotate(216deg); }
+            80% { opacity: 0.5; transform: scale(0.9) rotate(288deg); }
+        }
+
+        @keyframes twinkle8 {
+            0%, 100% { opacity: 0.2; transform: scale(0.5); }
+            12% { opacity: 0.7; transform: scale(1.2); }
+            37% { opacity: 1; transform: scale(1.8); }
+            62% { opacity: 0.4; transform: scale(0.9); }
+            87% { opacity: 0.8; transform: scale(1.4); }
+        }
+
+        @keyframes twinkle9 {
+            0%, 100% { opacity: 0.5; transform: scale(1.0) rotate(0deg); }
+            10% { opacity: 0.3; transform: scale(0.7) rotate(36deg); }
+            30% { opacity: 1; transform: scale(1.5) rotate(108deg); }
+            70% { opacity: 0.8; transform: scale(1.2) rotate(252deg); }
+            90% { opacity: 0.6; transform: scale(0.9) rotate(324deg); }
+        }
+
+        @keyframes twinkle10 {
+            0%, 100% { opacity: 0.4; transform: scale(0.8); }
+            16% { opacity: 0.9; transform: scale(1.3); }
+            33% { opacity: 0.2; transform: scale(0.6); }
+            50% { opacity: 1; transform: scale(1.7); }
+            66% { opacity: 0.6; transform: scale(1.0); }
+            83% { opacity: 0.8; transform: scale(1.4); }
+        }
+
+        @keyframes twinkle11 {
+            0%, 100% { opacity: 0.3; transform: scale(0.7) rotate(0deg); }
+            25% { opacity: 0.8; transform: scale(1.3) rotate(90deg); }
+            50% { opacity: 1; transform: scale(1.6) rotate(180deg); }
+            75% { opacity: 0.5; transform: scale(1.0) rotate(270deg); }
+        }
+
+        @keyframes twinkle12 {
+            0%, 100% { opacity: 0.6; transform: scale(1.1); }
+            14% { opacity: 0.4; transform: scale(0.8); }
+            28% { opacity: 1; transform: scale(1.5); }
+            42% { opacity: 0.3; transform: scale(0.7); }
+            57% { opacity: 0.9; transform: scale(1.4); }
+            71% { opacity: 0.5; transform: scale(0.9); }
+            85% { opacity: 0.8; transform: scale(1.2); }
+        }
+
+        /* 연결선 효과 */
+        .connection-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+            animation: pulse 3s infinite;
+        }
+
+        .line:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            width: 30%;
+            transform: rotate(25deg);
+        }
+
+        .line:nth-child(2) {
+            top: 70%;
+            right: 20%;
+            width: 25%;
+            transform: rotate(-45deg);
+            animation-delay: 1s;
+        }
+
+        .line:nth-child(3) {
+            top: 50%;
+            left: 30%;
+            width: 40%;
+            transform: rotate(15deg);
+            animation-delay: 2s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .main-container {
+            display: flex;
+            gap: 30px;
+            max-width: 1100px;
+            width: 100%;
+            align-items: stretch;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.3),
+                0 0 100px rgba(59, 130, 246, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 20px 28px;
+            animation: fadeIn 0.6s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        .info-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.3),
+                0 0 100px rgba(59, 130, 246, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 20px 28px;
+            animation: fadeIn 0.8s ease-out;
+            animation-delay: 0.2s;
+            animation-fill-mode: both;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .company-logo {
+            width: 180px;
+            height: 36px;
+            margin-bottom: 12px;
+            animation: logoFade 0.8s ease-out;
+        }
+
+        @keyframes logoFade {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .header h1 {
+            color: #1a1a2e;
+            font-size: 1.5em;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 0.85em;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+            animation: slideIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .required {
+            color: #dc2626;
+            margin-left: 3px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            background: #f8fafc;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background: white;
+        }
+
+        input.error,
+        textarea.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        input.error:focus,
+        textarea.error:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+
+        input.success,
+        textarea.success {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.75em;
+            margin-top: 2px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        textarea#ideaDescription {
+            min-height: 150px;
+        }
+
+        textarea#expectedEffect {
+            min-height: 150px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .file-upload-text {
+            text-align: center;
+        }
+
+        .file-upload-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .file-info {
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: #dbeafe;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #1e3a8a;
+            display: none;
+            border: 1px solid #93c5fd;
+        }
+
+        .checkbox-group {
+            margin: 12px 0;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .checkbox-wrapper:last-child {
+            margin-bottom: 0;
+        }
+
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            margin-top: 1px;
+            cursor: pointer;
+            accent-color: #3b82f6;
+        }
+
+        .checkbox-label {
+            flex: 1;
+            color: #475569;
+            line-height: 1.3;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .checkbox-wrapper.error .checkbox-label {
+            color: #dc2626;
+        }
+
+        .checkbox-error {
+            color: #dc2626;
+            font-size: 0.75em;
+            margin-top: 6px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .checkbox-error.show {
+            display: block;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px 18px;
+            background: #1a1a2e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            background: #0f0f1e;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .submit-btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            z-index: 1000;
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .success-icon {
+            font-size: 4em;
+            color: #10b981;
+            margin-bottom: 20px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* 공모전 안내사항 스타일 */
+        .info-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .info-header h2 {
+            color: #1a1a2e;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .info-header p {
+            color: #64748b;
+            font-size: 0.85em;
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-section h3 {
+            color: #1a1a2e;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-section li {
+            color: #475569;
+            font-size: 0.85em;
+            line-height: 1.6;
+            margin-bottom: 6px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .info-section li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+        }
+
+        .highlight-box {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        .highlight-box h4 {
+            color: #0369a1;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .highlight-box p {
+            color: #0c4a6e;
+            font-size: 0.8em;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: #f8fafc;
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: #3b82f6;
+            min-width: 80px;
+        }
+
+        .timeline-desc {
+            color: #475569;
+        }
+
+        /* 반응형 디자인 - 작은 화면에서만 세로 정렬 */
+        @media (max-width: 1200px) {
+            .main-container {
+                gap: 20px;
+            }
+            
+            .container, .info-container {
+                max-width: 100%;
+                width: calc(50% - 10px);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .container, .info-container {
+                width: 100%;
+                max-width: 500px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 10px;
+            }
+
+            .container, .info-container {
+                padding: 24px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.3em;
+            }
+
+            textarea {
+                min-height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 연결선 효과 -->
+    <div class="connection-lines">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+
+    <!-- 플로팅 노드 및 로고 효과 (JavaScript로 동적 생성) -->
+    <div class="floating-nodes" id="floatingContainer">
+        <!-- 여기에 JavaScript로 동적으로 로고와 별들이 추가됩니다 -->
+    </div>
+
+    <div class="main-container">
+        <!-- 공모전 안내사항 (왼쪽) -->
+        <div class="info-container">
+            <div class="info-header">
+                <h2>📢 공모전 안내사항</h2>
+                <p>AI 에이전트 아이디어 사내 공모전</p>
+            </div>
+
+            <div class="info-section">
+                <h3>🎯 공모전 목적</h3>
+                <ul>
+                    <li>업무 효율성을 높일 수 있는 AI 에이전트 발굴</li>
+                    <li>직원들의 창의적인 아이디어 수집</li>
+                    <li>AI 기술을 활용한 혁신적인 업무 개선</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h3>📅 일정</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-date">접수 기간</span>
+                        <span class="timeline-desc">2025.07.16 ~ 2025.08.04</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">심사 기간</span>
+                        <span class="timeline-desc">2025.08.05 ~ 2025.08.07</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">결과 발표</span>
+                        <span class="timeline-desc">2025.08.08</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>🏆 시상 내역</h3>
+                <ul>
+                    <li>1등: 30만원 백화점 상품권</li>
+                    <li>2등: 10만원 백화점 상품권</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h3>✅ 심사 기준</h3>
+                <ul>
+                    <li>실현 가능성</li>
+                    <li>업무 활용도</li>
+                    <li>창의성</li>
+                    <li>기대 효과</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h4>💡 유의사항</h4>
+                <p>
+                    • 제출된 아이디어는 회사 자산으로 귀속됩니다<br>
+                    • 제출 후 수정은 불가능합니다<br>
+                    • 우수 아이디어는 실제 개발로 이어질 수 있습니다<br>
+                    <span style="color: #3b82f6; font-weight: 600;">&nbsp;&nbsp;※ 아이디어 제공자는 본인 희망 시 참여할 수 있습니다</span><br>
+                    • 문의: verykim@grovesoft.net
+                </p>
+            </div>
+        </div>
+
+        <!-- 접수 폼 (오른쪽) -->
+        <div class="container">
+            <div class="header">
+                <svg class="company-logo" viewBox="0 0 400 40" xmlns="http://www.w3.org/2000/svg">
+                    <text x="200" y="32" font-family="Arial, sans-serif" font-size="36" font-weight="700" text-anchor="middle" fill="#1a1a2e" letter-spacing="18">GROVE</text>
+                </svg>
+                <h1>🤖 AI 에이전트 아이디어 사내 공모전</h1>
+                <p>당신의 창의적인 AI 아이디어를 들려주세요!</p>
+            </div>
+
+            <form id="contestForm">
+                <div class="form-group">
+                    <label for="nickname">
+                        참여자 <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="nickname" 
+                        name="nickname" 
+                        placeholder="이름을 입력해 주세요. 팀으로 참여 시 팀원을 모두 입력해 주세요."
+                        required
+                    >
+                    <div class="error-message" id="nicknameError">이름을 입력해주세요.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ideaTitle">
+                        아이디어 제목 <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="ideaTitle" 
+                        name="ideaTitle" 
+                        placeholder="AI 에이전트 아이디어의 제목을 입력해주세요"
+                        required
+                    >
+                    <div class="error-message" id="titleError">아이디어 제목을 입력해주세요.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ideaDescription">
+                        아이디어 설명 <span class="required">*</span>
+                    </label>
+                    <textarea 
+                        id="ideaDescription" 
+                        name="ideaDescription" 
+                        placeholder="아이디어에 대해 자유롭게 설명해주세요. 글자 수 제한은 없습니다."
+                        required
+                    ></textarea>
+                    <div class="error-message" id="descriptionError">아이디어 설명을 입력해주세요.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="expectedEffect">
+                        기대 효과 <span class="required">*</span>
+                    </label>
+                    <textarea 
+                        id="expectedEffect" 
+                        name="expectedEffect" 
+                        placeholder="이 아이디어로 기대되는 효과나 개선사항을 설명해주세요."
+                        required
+                        style="min-height: 80px;"
+                    ></textarea>
+                    <div class="error-message" id="effectError">기대 효과를 입력해주세요.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fileUpload">
+                        파일 첨부 (선택사항)
+                    </label>
+                    <div class="file-upload">
+                        <input type="file" id="fileUpload" name="fileUpload" accept=".pdf,.doc,.docx,.ppt,.pptx,.zip">
+                        <label for="fileUpload" class="file-upload-label">
+                            <div class="file-upload-icon">📁</div>
+                            <div class="file-upload-text">
+                                <div style="font-size: 0.85em;">파일을 선택하거나 여기로 드래그하세요</div>
+                                <div style="font-size: 0.75em; color: #718096; margin-top: 2px;">
+                                    PDF, DOC, PPT, ZIP (최대 10MB)
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="file-info" id="fileInfo"></div>
+                </div>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="agree1" name="agree1" required>
+                        <label for="agree1" class="checkbox-label">
+                            제출한 아이디어가 사내에서 활용될 수 있음에 동의합니다.
+                        </label>
+                    </div>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="agree2" name="agree2" required>
+                        <label for="agree2" class="checkbox-label">
+                            동일한 아이디어를 중복 제출하지 않았음을 확인합니다.
+                        </label>
+                    </div>
+                    <div class="checkbox-error" id="checkboxError">모든 동의 항목에 체크해주세요.</div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    🚀 제출하기
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="success-message" id="successMessage">
+        <div class="success-icon">✅</div>
+        <h2>제출이 완료되었습니다!</h2>
+        <p>좋은 아이디어를 공유해주셔서 감사합니다.</p>
+    </div>
+
+    <script>
+        // 실시간 유효성 검사
+        const validateField = (field) => {
+            const value = field.value.trim();
+            const errorElement = field.parentElement.querySelector('.error-message');
+            
+            if (value === '') {
+                field.classList.add('error');
+                field.classList.remove('success');
+                if (errorElement) errorElement.classList.add('show');
+                return false;
+            } else {
+                field.classList.remove('error');
+                field.classList.add('success');
+                if (errorElement) errorElement.classList.remove('show');
+                return true;
+            }
+        };
+
+        // 입력 필드 실시간 검사
+        const participant = document.getElementById('nickname');
+        const ideaTitle = document.getElementById('ideaTitle');
+        const ideaDescription = document.getElementById('ideaDescription');
+        const expectedEffect = document.getElementById('expectedEffect');
+
+        participant.addEventListener('blur', () => validateField(participant));
+        ideaTitle.addEventListener('blur', () => validateField(ideaTitle));
+        ideaDescription.addEventListener('blur', () => validateField(ideaDescription));
+        expectedEffect.addEventListener('blur', () => validateField(expectedEffect));
+
+        // 입력 시 에러 상태 제거
+        participant.addEventListener('input', () => {
+            if (participant.value.trim() !== '') {
+                participant.classList.remove('error');
+                document.getElementById('nicknameError').classList.remove('show');
+            }
+        });
+
+        ideaTitle.addEventListener('input', () => {
+            if (ideaTitle.value.trim() !== '') {
+                ideaTitle.classList.remove('error');
+                document.getElementById('titleError').classList.remove('show');
+            }
+        });
+
+        ideaDescription.addEventListener('input', () => {
+            if (ideaDescription.value.trim() !== '') {
+                ideaDescription.classList.remove('error');
+                document.getElementById('descriptionError').classList.remove('show');
+            }
+        });
+
+        expectedEffect.addEventListener('input', () => {
+            if (expectedEffect.value.trim() !== '') {
+                expectedEffect.classList.remove('error');
+                document.getElementById('effectError').classList.remove('show');
+            }
+        });
+
+        // 체크박스 검사
+        const agree1 = document.getElementById('agree1');
+        const agree2 = document.getElementById('agree2');
+        const checkboxError = document.getElementById('checkboxError');
+
+        const validateCheckboxes = () => {
+            if (!agree1.checked || !agree2.checked) {
+                checkboxError.classList.add('show');
+                return false;
+            } else {
+                checkboxError.classList.remove('show');
+                return true;
+            }
+        };
+
+        agree1.addEventListener('change', () => {
+            if (agree1.checked && agree2.checked) {
+                checkboxError.classList.remove('show');
+            }
+        });
+
+        agree2.addEventListener('change', () => {
+            if (agree1.checked && agree2.checked) {
+                checkboxError.classList.remove('show');
+            }
+        });
+
+        // 파일 업로드 처리
+        const fileUpload = document.getElementById('fileUpload');
+        const fileInfo = document.getElementById('fileInfo');
+        
+        fileUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                if (fileSize > 10) {
+                    alert('파일 크기는 10MB를 초과할 수 없습니다.');
+                    e.target.value = '';
+                    fileInfo.style.display = 'none';
+                    return;
+                }
+                fileInfo.innerHTML = `📎 ${file.name} (${fileSize}MB)`;
+                fileInfo.style.display = 'block';
+            } else {
+                fileInfo.style.display = 'none';
+            }
+        });
+
+        // 폼 제출 처리
+        const form = document.getElementById('contestForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const overlay = document.getElementById('overlay');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // 모든 필드 유효성 검사
+            let isValid = true;
+            
+            // 필드 검사
+            if (!validateField(participant)) isValid = false;
+            if (!validateField(ideaTitle)) isValid = false;
+            if (!validateField(ideaDescription)) isValid = false;
+            if (!validateField(expectedEffect)) isValid = false;
+            
+            // 체크박스 검사
+            if (!validateCheckboxes()) isValid = false;
+            
+            if (!isValid) {
+                // 에러가 있는 첫 번째 요소로 스크롤
+                const firstError = document.querySelector('.error');
+                if (firstError) {
+                    firstError.focus();
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+            
+            // 제출 버튼 비활성화
+            submitBtn.disabled = true;
+            submitBtn.textContent = '제출 중...';
+            
+            // FormData 생성
+            const formData = new FormData();
+            formData.append('participant', participant.value.trim());
+            formData.append('ideaTitle', ideaTitle.value.trim());
+            formData.append('ideaDescription', ideaDescription.value.trim());
+            formData.append('expectedEffect', expectedEffect.value.trim());
+            
+            if (fileUpload.files[0]) {
+                formData.append('file', fileUpload.files[0]);
+            }
+            
+            // 구글폼 웹앱 URL (실제 URL로 교체 필요)
+            const GOOGLE_FORM_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+            
+            try {
+                // 실제 구현 시 아래 주석을 해제하고 사용
+                /*
+                const response = await fetch(GOOGLE_FORM_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    showSuccessMessage();
+                } else {
+                    throw new Error('제출 실패');
+                }
+                */
+                
+                // 데모용 - 2초 후 성공 메시지 표시
+                setTimeout(() => {
+                    showSuccessMessage();
+                }, 2000);
+                
+            } catch (error) {
+                alert('제출 중 오류가 발생했습니다. 다시 시도해주세요.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 제출하기';
+            }
+        });
+        
+        function showSuccessMessage() {
+            overlay.style.display = 'block';
+            successMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                // 폼 초기화
+                form.reset();
+                fileInfo.style.display = 'none';
+                overlay.style.display = 'none';
+                successMessage.style.display = 'none';
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 제출하기';
+                
+                // success 클래스 제거
+                document.querySelectorAll('.success').forEach(el => {
+                    el.classList.remove('success');
+                });
+            }, 3000);
+        }
+
+        // 랜덤 배경 요소 생성 함수
+        function createRandomBackground() {
+            const container = document.getElementById('floatingContainer');
+            
+            // 기존 요소들 제거
+            container.innerHTML = '';
+            
+            // 랜덤 개수 설정
+            const logoCount = Math.floor(Math.random() * 8) + 3; // 3~10개 로고
+            const starCount = Math.floor(Math.random() * 25) + 15; // 15~40개 별
+            
+            console.log(`🎲 랜덤 생성: 로고 ${logoCount}개, 별 ${starCount}개`);
+            
+            // 색상 배열
+            const colors = [
+                'rgba(59, 130, 246, 0.6)',
+                'rgba(139, 92, 246, 0.6)', 
+                'rgba(16, 185, 129, 0.6)',
+                'rgba(245, 101, 101, 0.6)',
+                'rgba(251, 191, 36, 0.6)',
+                'rgba(168, 85, 247, 0.6)',
+                'rgba(236, 72, 153, 0.6)',
+                'rgba(34, 197, 94, 0.6)',
+                'rgba(249, 115, 22, 0.6)',
+                'rgba(156, 163, 175, 0.6)'
+            ];
+            
+            // GROVE SVG 템플릿
+            const createLogoSVG = (color) => `
+                <svg viewBox="0 0 500 60" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="${color}">
+                        <!-- G -->
+                        <path d="M50 30 C50 15, 35 5, 25 5 C15 5, 5 15, 5 30 C5 45, 15 55, 25 55 C35 55, 45 48, 45 40 L35 40 L35 45 C32 47, 28 47, 25 47 C19 47, 13 41, 13 30 C13 19, 19 13, 25 13 C31 13, 37 19, 37 25 L25 25 L25 35 L45 35 C47 32, 50 31, 50 30 Z"/>
+                        <!-- R -->
+                        <path d="M75 5 L75 55 L85 55 L85 35 L100 35 L110 55 L120 55 L108 33 C115 30, 120 24, 120 15 C120 8, 115 5, 105 5 L75 5 Z M85 13 L105 13 C108 13, 110 15, 110 18 C110 21, 108 23, 105 23 L85 23 L85 13 Z"/>
+                        <!-- O -->
+                        <circle cx="160" cy="30" r="25" fill="none" stroke="${color}" stroke-width="8"/>
+                        <!-- V -->
+                        <path d="M210 5 L220 5 L235 45 L250 5 L260 5 L240 55 L230 55 L210 5 Z"/>
+                        <!-- E -->
+                        <path d="M285 5 L285 55 L330 55 L330 47 L295 47 L295 35 L325 35 L325 27 L295 27 L295 13 L330 13 L330 5 L285 5 Z"/>
+                    </g>
+                </svg>
+            `;
+            
+            // 로고 생성
+            for (let i = 0; i < logoCount; i++) {
+                const logo = document.createElement('div');
+                logo.className = 'floating-logo';
+                
+                // 랜덤 색상
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                logo.innerHTML = createLogoSVG(color);
+                
+                // 랜덤 위치와 애니메이션
+                const top = Math.random() * 90 + 5; // 5%~95%
+                const left = Math.random() * 90 + 5; // 5%~95%
+                const rotation = Math.random() * 60 - 30; // -30도~30도
+                const animDuration = Math.random() * 15 + 20; // 20~35초
+                const size = Math.random() * 40 + 80; // 80~120px
+                
+                logo.style.top = top + '%';
+                logo.style.left = left + '%';
+                logo.style.transform = `rotate(${rotation}deg)`;
+                logo.style.width = size + 'px';
+                logo.style.height = (size * 0.25) + 'px'; // 가로세로 비율 유지
+                logo.style.animation = `logoFloat${(i % 7) + 1} ${animDuration}s infinite ease-in-out`;
+                
+                container.appendChild(logo);
+            }
+            
+            // 별 생성
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'node';
+                
+                // 랜덤 색상
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const bgColor = color.replace('0.6)', '0.8)');
+                const shadowColor = color.replace('0.6)', '0.9)');
+                
+                // 랜덤 속성
+                const top = Math.random() * 95 + 2; // 2%~97%
+                const left = Math.random() * 95 + 2; // 2%~97%
+                const size = Math.random() * 6 + 4; // 4~10px
+                const animDuration = Math.random() * 10 + 6; // 6~16초
+                const animDelay = Math.random() * 5; // 0~5초 딜레이
+                
+                star.style.top = top + '%';
+                star.style.left = left + '%';
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.background = bgColor;
+                star.style.boxShadow = `0 0 ${size * 2.5}px ${shadowColor}`;
+                star.style.animation = `twinkle${(i % 12) + 1} ${animDuration}s infinite ease-in-out`;
+                star.style.animationDelay = animDelay + 's';
+                
+                container.appendChild(star);
+            }
+        }
+        
+        // 페이지 로드 시 랜덤 배경 생성
+        document.addEventListener('DOMContentLoaded', createRandomBackground);
+        
+        // 개발자를 위한 함수 (콘솔에서 호출 가능)
+        window.regenerateBackground = createRandomBackground;
+    </script>
+</body>
+</html>
