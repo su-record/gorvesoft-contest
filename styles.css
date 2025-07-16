@@ -563,13 +563,17 @@ input[type="checkbox"] {
     gap: 6px;
 }
 
-.info-section .highlight-text {
+.info-section .info-section-desc {
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.info-section-desc .highlight-text {
     display: block;
     color: #3b82f6;
-    font-size: 1.1em;
+    font-size: 1em;
     font-weight: 600;
     font-style: italic;
-    text-align: center;
 }
 
 .info-section ul {
@@ -582,7 +586,7 @@ input[type="checkbox"] {
 .info-section li {
     color: #475569;
     font-size: 0.85em;
-    line-height: 1.45;
+    line-height: 1.2;
     margin-bottom: 6px;
     padding-left: 20px;
     position: relative;
@@ -628,14 +632,14 @@ input[type="checkbox"] {
 .timeline {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 
 .timeline-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 6px 10px;
+    padding: 4px 10px;
     background: #f8fafc;
     border-radius: 6px;
     font-size: 0.85em;
