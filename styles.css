@@ -327,7 +327,7 @@ textarea.success {
 }
 
 textarea {
-    min-height: 120px;
+    min-height: 130px;
     resize: vertical;
 }
 
@@ -440,7 +440,7 @@ input[type="checkbox"] {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 10px;
+    margin-top: 14px;
     position: relative;
     overflow: hidden;
     text-transform: uppercase;
@@ -541,6 +541,12 @@ input[type="checkbox"] {
     font-size: 0.85em;
 }
 
+.info-section-container {
+    display: flex;
+    gap: 20px;
+}
+
+
 .info-section {
     margin-bottom: 20px;
 }
@@ -561,10 +567,11 @@ input[type="checkbox"] {
     margin: 0;
 }
 
+.info-section p,
 .info-section li {
     color: #475569;
     font-size: 0.85em;
-    line-height: 1.6;
+    line-height: 1.4;
     margin-bottom: 6px;
     padding-left: 20px;
     position: relative;
@@ -575,6 +582,13 @@ input[type="checkbox"] {
     position: absolute;
     left: 0;
     color: #3b82f6;
+}
+
+.info-section p {
+    margin-bottom: 0;
+    font-size: 0.8em;
+    line-height: 1.6;
+    letter-spacing: -1px;
 }
 
 .highlight-box {
