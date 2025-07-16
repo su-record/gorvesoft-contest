@@ -230,6 +230,7 @@ body::after {
     font-size: 1.5em;
     margin-bottom: 4px;
     font-weight: 700;
+    letter-spacing: -2px;
 }
 
 .header p {
@@ -524,7 +525,7 @@ input[type="checkbox"] {
 /* 공모전 안내사항 스타일 */
 .info-header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     padding-bottom: 16px;
     font-style: italic;
     border-bottom: 2px solid #e2e8f0;
@@ -549,7 +550,7 @@ input[type="checkbox"] {
 
 
 .info-section {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .info-section h3 {
@@ -560,6 +561,15 @@ input[type="checkbox"] {
     display: flex;
     align-items: center;
     gap: 6px;
+}
+
+.info-section .highlight-text {
+    display: block;
+    color: #3b82f6;
+    font-size: 1.1em;
+    font-weight: 600;
+    font-style: italic;
+    text-align: center;
 }
 
 .info-section ul {
@@ -587,6 +597,7 @@ input[type="checkbox"] {
 
 .info-section p {
     margin-bottom: 0;
+    padding:0 1em;
     font-size: 0.8em;
     line-height: 1.7;
     letter-spacing: -1px;
