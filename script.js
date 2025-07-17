@@ -90,6 +90,27 @@ agree2.addEventListener('change', () => {
 });
 
 // 파일 업로드 처리
+const fileUpload = document.getElementById('fileUpload');
+const fileInfo = document.getElementById('fileInfo');
+
+fileUpload.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const fileSize = (file.size / 1024 / 1024).toFixed(2);
+        if (fileSize > 10) {
+            alert('파일 크기는 10MB를 초과할 수 없습니다.');
+            e.target.value = '';
+            fileInfo.style.display = 'none';
+            return;
+        }
+        fileInfo.innerHTML = `📎 ${file.name} (${fileSize}MB)`;
+        fileInfo.style.display = 'block';
+    } else {
+        fileInfo.style.display = 'none';
+    }
+});
+
+// 파일 링크 처리
 const fileUrl = document.getElementById('fileUrl');
 
 // 폼 제출 처리
@@ -163,6 +184,17 @@ const sendEmailViaEmailJS = async () => {
             file_url: fileUrl.value.trim(),
             to_email: 'grove.ai.contest@gmail.com'
         };
+        
+        // 파일이 있는 경우
+        if (fileUpload.files[0]) {
+            const file = fileUpload.files[0];
+            
+            // EmailJS는 base64 첨부를 지원하지 않으므로 파일 정보만 포함
+            templateParams.attachment_info = `파일명: ${file.name}, 크기: ${(file.size / 1024).toFixed(2)}KB`;
+            templateParams.has_attachment = 'YES';
+        } else {
+            templateParams.has_attachment = 'NO';
+        }
         
         // EmailJS로 이메일 발송 - 실제 Service ID와 Template ID로 교체 필요
         const response = await emailjs.send(
