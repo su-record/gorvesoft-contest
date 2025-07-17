@@ -328,7 +328,7 @@ textarea.success {
 }
 
 textarea {
-    min-height: 127px;
+    min-height: 105px;
     resize: vertical;
 }
 
@@ -658,6 +658,94 @@ input[type="checkbox"] {
     color: #475569;
 }
 
+/* URL 입력 필드 스타일 */
+input[type="url"] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.85em;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    background: #f8fafc;
+}
+
+input[type="url"]:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    background: white;
+}
+
+input[type="url"].error {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+input[type="url"].error:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+input[type="url"].success {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+/* 파일 첨부 안내 박스 */
+.file-notice {
+    margin-top: 8px;
+    padding: 6px 14px;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 8px;
+    font-size: 0.8em;
+}
+
+.file-notice .notice-title {
+    color: #0369a1;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.file-notice ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.file-notice li {
+    color: #0c4a6e;
+    font-size: 0.85em;
+    line-height: 1.4;
+    padding-left: 16px;
+    position: relative;
+}
+
+.file-notice li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #0369a1;
+}
+
+.file-notice li:last-child {
+    margin-bottom: 0;
+}
+
+/* URL 에러 메시지 */
+.url-error {
+    color: #dc2626;
+    font-size: 0.75em;
+    margin-top: 2px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.url-error.show {
+    display: block;
+}
+
 /* 반응형 디자인 - 작은 화면에서만 세로 정렬 */
 @media (max-width: 1200px) {
     .main-container {
@@ -693,9 +781,5 @@ input[type="checkbox"] {
     
     .header h1 {
         font-size: 1.3em;
-    }
-
-    textarea {
-        min-height: 100px;
     }
 }

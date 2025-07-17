@@ -22,16 +22,54 @@ const validateField = (field) => {
     }
 };
 
+// URL 유효성 검사 함수
+const validateUrl = (url) => {
+    if (!url) return true; // 선택사항이므로 비어있으면 통과
+    
+    try {
+        new URL(url);
+        return true;
+    } catch {
+        return false;
+    }
+};
+
 // 입력 필드 실시간 검사
 const participant = document.getElementById('nickname');
 const ideaTitle = document.getElementById('ideaTitle');
 const ideaDescription = document.getElementById('ideaDescription');
 const expectedEffect = document.getElementById('expectedEffect');
+const fileUrl = document.getElementById('fileUrl');
 
 participant.addEventListener('blur', () => validateField(participant));
 ideaTitle.addEventListener('blur', () => validateField(ideaTitle));
 ideaDescription.addEventListener('blur', () => validateField(ideaDescription));
 expectedEffect.addEventListener('blur', () => validateField(expectedEffect));
+
+// URL 필드 검사
+fileUrl.addEventListener('blur', () => {
+    const url = fileUrl.value.trim();
+    if (url && !validateUrl(url)) {
+        fileUrl.classList.add('error');
+        fileUrl.classList.remove('success');
+        
+        // URL 에러 메시지 표시
+        let errorElement = fileUrl.parentElement.querySelector('.url-error');
+        if (!errorElement) {
+            errorElement = document.createElement('div');
+            errorElement.className = 'error-message url-error';
+            errorElement.textContent = '올바른 URL 형식을 입력해주세요.';
+            fileUrl.parentElement.insertBefore(errorElement, fileUrl.nextSibling);
+        }
+        errorElement.classList.add('show');
+    } else {
+        fileUrl.classList.remove('error');
+        if (url) fileUrl.classList.add('success');
+        
+        const errorElement = fileUrl.parentElement.querySelector('.url-error');
+        if (errorElement) errorElement.classList.remove('show');
+    }
+});
 
 // 입력 시 에러 상태 제거
 participant.addEventListener('input', () => {
@@ -86,27 +124,6 @@ agree1.addEventListener('change', () => {
 agree2.addEventListener('change', () => {
     if (agree1.checked && agree2.checked) {
         checkboxError.classList.remove('show');
-    }
-});
-
-// 파일 업로드 처리
-const fileUpload = document.getElementById('fileUpload');
-const fileInfo = document.getElementById('fileInfo');
-
-fileUpload.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        const fileSize = (file.size / 1024 / 1024).toFixed(2);
-        if (fileSize > 10) {
-            alert('파일 크기는 10MB를 초과할 수 없습니다.');
-            e.target.value = '';
-            fileInfo.style.display = 'none';
-            return;
-        }
-        fileInfo.innerHTML = `📎 ${file.name} (${fileSize}MB)`;
-        fileInfo.style.display = 'block';
-    } else {
-        fileInfo.style.display = 'none';
     }
 });
 
@@ -168,7 +185,6 @@ function checkDeadline(showAlert = false) {
     return true;
 }
 
-
 // EmailJS를 이용한 이메일 발송
 const sendEmailViaEmailJS = async () => {
     try {
@@ -177,20 +193,10 @@ const sendEmailViaEmailJS = async () => {
             idea_title: ideaTitle.value.trim(),
             idea_description: ideaDescription.value.trim(),
             expected_effect: expectedEffect.value.trim(),
+            file_url: fileUrl.value.trim() || '첨부 없음',
             submission_time: new Date().toLocaleString('ko-KR'),
             to_email: 'grove.ai.contest@gmail.com'
         };
-        
-        // 파일이 있는 경우
-        if (fileUpload.files[0]) {
-            const file = fileUpload.files[0];
-            
-            // EmailJS는 base64 첨부를 지원하지 않으므로 파일 정보만 포함
-            templateParams.attachment_info = `파일명: ${file.name}, 크기: ${(file.size / 1024).toFixed(2)}KB`;
-            templateParams.has_attachment = 'YES';
-        } else {
-            templateParams.has_attachment = 'NO';
-        }
         
         // EmailJS로 이메일 발송 - 실제 Service ID와 Template ID로 교체 필요
         const response = await emailjs.send(
@@ -224,6 +230,22 @@ form.addEventListener('submit', async (e) => {
     if (!validateField(ideaTitle)) isValid = false;
     if (!validateField(ideaDescription)) isValid = false;
     if (!validateField(expectedEffect)) isValid = false;
+    
+    // URL 검사
+    const url = fileUrl.value.trim();
+    if (url && !validateUrl(url)) {
+        isValid = false;
+        fileUrl.classList.add('error');
+        
+        let errorElement = fileUrl.parentElement.querySelector('.url-error');
+        if (!errorElement) {
+            errorElement = document.createElement('div');
+            errorElement.className = 'error-message url-error';
+            errorElement.textContent = '올바른 URL 형식을 입력해주세요.';
+            fileUrl.parentElement.insertBefore(errorElement, fileUrl.nextSibling);
+        }
+        errorElement.classList.add('show');
+    }
     
     // 체크박스 검사
     if (!validateCheckboxes()) isValid = false;
@@ -261,7 +283,7 @@ function showSuccessMessage() {
     setTimeout(() => {
         // 폼 초기화
         form.reset();
-        fileInfo.style.display = 'none';
+        fileUrl.classList.remove('success');
         overlay.style.display = 'none';
         successMessage.style.display = 'none';
         submitBtn.disabled = false;
