@@ -22,54 +22,16 @@ const validateField = (field) => {
     }
 };
 
-// URL 유효성 검사 함수
-const validateUrl = (url) => {
-    if (!url) return true; // 선택사항이므로 비어있으면 통과
-    
-    try {
-        new URL(url);
-        return true;
-    } catch {
-        return false;
-    }
-};
-
 // 입력 필드 실시간 검사
 const participant = document.getElementById('nickname');
 const ideaTitle = document.getElementById('ideaTitle');
 const ideaDescription = document.getElementById('ideaDescription');
 const expectedEffect = document.getElementById('expectedEffect');
-const fileUrl = document.getElementById('fileUrl');
 
 participant.addEventListener('blur', () => validateField(participant));
 ideaTitle.addEventListener('blur', () => validateField(ideaTitle));
 ideaDescription.addEventListener('blur', () => validateField(ideaDescription));
 expectedEffect.addEventListener('blur', () => validateField(expectedEffect));
-
-// URL 필드 검사
-fileUrl.addEventListener('blur', () => {
-    const url = fileUrl.value.trim();
-    if (url && !validateUrl(url)) {
-        fileUrl.classList.add('error');
-        fileUrl.classList.remove('success');
-        
-        // URL 에러 메시지 표시
-        let errorElement = fileUrl.parentElement.querySelector('.url-error');
-        if (!errorElement) {
-            errorElement = document.createElement('div');
-            errorElement.className = 'error-message url-error';
-            errorElement.textContent = '올바른 URL 형식을 입력해주세요.';
-            fileUrl.parentElement.insertBefore(errorElement, fileUrl.nextSibling);
-        }
-        errorElement.classList.add('show');
-    } else {
-        fileUrl.classList.remove('error');
-        if (url) fileUrl.classList.add('success');
-        
-        const errorElement = fileUrl.parentElement.querySelector('.url-error');
-        if (errorElement) errorElement.classList.remove('show');
-    }
-});
 
 // 입력 시 에러 상태 제거
 participant.addEventListener('input', () => {
@@ -126,6 +88,9 @@ agree2.addEventListener('change', () => {
         checkboxError.classList.remove('show');
     }
 });
+
+// 파일 업로드 처리
+const fileUrl = document.getElementById('fileUrl');
 
 // 폼 제출 처리
 const form = document.getElementById('contestForm');
@@ -185,6 +150,7 @@ function checkDeadline(showAlert = false) {
     return true;
 }
 
+
 // EmailJS를 이용한 이메일 발송
 const sendEmailViaEmailJS = async () => {
     try {
@@ -193,8 +159,8 @@ const sendEmailViaEmailJS = async () => {
             idea_title: ideaTitle.value.trim(),
             idea_description: ideaDescription.value.trim(),
             expected_effect: expectedEffect.value.trim(),
-            file_url: fileUrl.value.trim() || '첨부 없음',
             submission_time: new Date().toLocaleString('ko-KR'),
+            file_url: fileUrl.value.trim(),
             to_email: 'grove.ai.contest@gmail.com'
         };
         
@@ -230,22 +196,6 @@ form.addEventListener('submit', async (e) => {
     if (!validateField(ideaTitle)) isValid = false;
     if (!validateField(ideaDescription)) isValid = false;
     if (!validateField(expectedEffect)) isValid = false;
-    
-    // URL 검사
-    const url = fileUrl.value.trim();
-    if (url && !validateUrl(url)) {
-        isValid = false;
-        fileUrl.classList.add('error');
-        
-        let errorElement = fileUrl.parentElement.querySelector('.url-error');
-        if (!errorElement) {
-            errorElement = document.createElement('div');
-            errorElement.className = 'error-message url-error';
-            errorElement.textContent = '올바른 URL 형식을 입력해주세요.';
-            fileUrl.parentElement.insertBefore(errorElement, fileUrl.nextSibling);
-        }
-        errorElement.classList.add('show');
-    }
     
     // 체크박스 검사
     if (!validateCheckboxes()) isValid = false;
@@ -283,7 +233,7 @@ function showSuccessMessage() {
     setTimeout(() => {
         // 폼 초기화
         form.reset();
-        fileUrl.classList.remove('success');
+        fileInfo.style.display = 'none';
         overlay.style.display = 'none';
         successMessage.style.display = 'none';
         submitBtn.disabled = false;
